@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"github.com/urfave/cli/v2"
 	"os"
-	"strings"
+	"time"
 )
 
 func main() {
@@ -18,23 +18,23 @@ func main() {
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:  "indexName",
-				Value: "loglog2",
+				Value: "loglog102",
 			}, &cli.StringFlag{
-				Name:  "docType",
-				Value: "log",
+				Name:  "from",
+				Value: "2009-10-10 10:10:10",
+			}, &cli.IntFlag{
+				Name:  "size",
+				Value: 5,
 			}, &cli.StringFlag{
-				Name:  "ids",
-				Value: "1,2",
-			},&cli.StringFlag{
 				Name:  "esUrl",
-				Value: "http://192.168.1.194:9200",
+				Value: "http://192.168.2.194:9200",
 			},
 		}, Action: func(c *cli.Context) error {
-			idsStr := c.String("ids")
-			ids := strings.Split(idsStr, ",")
-			if len(ids) == 0 {
-				return fmt.Errorf("ids invalid")
+			from, err := time.Parse("2006-01-02 15:04:05", c.String("from"))
+			if err != nil {
+				return fmt.Errorf("cant't parse from arg")
 			}
+			to := time.Now()
 			elasticConfig := elasticPkg.ConfigT{
 				URL: c.String("esUrl"),
 			}
@@ -44,19 +44,20 @@ func main() {
 				return err
 			}
 			queryer := query.NewQueryer(elasticDao.NewDAO(client))
-			res , err :=  queryer.QueryByIds(ctx,
+			res, err := queryer.QueryByTime(ctx,
 				c.String("indexName"),
-				ids,
-				[]string{c.String("docType")},
+				from,
+				to,
+				c.Int("size"),
 			)
-			if err != nil{
+			if err != nil {
 				return err
 			}
-			if len(res) > 0{
-				for _, item := range res{
+			if len(res) > 0 {
+				for _, item := range res {
 					fmt.Println(item.String())
 				}
-			}else {
+			} else {
 				fmt.Println("not found")
 			}
 			return nil

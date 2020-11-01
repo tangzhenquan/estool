@@ -13,3 +13,13 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+/cmd/esImport/esImport
+/cmd/esImport/esImport.log
+/cmd/esImport/esImport.log.20201101
+/cmd/esQuery/esQuery
+/.idea/estool.iml
+/.idea/modules.xml
+/cmd/tool/testData.txt
+/cmd/tool/tool
+/.idea/vcs.xml
+/.idea/workspace.xml

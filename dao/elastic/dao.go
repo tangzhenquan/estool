@@ -4,6 +4,7 @@ import (
 	"context"
 	elasticapi "github.com/olivere/elastic/v7"
 	"reflect"
+	"time"
 )
 
 type DAO struct {
@@ -66,7 +67,7 @@ func (dao *DAO) BulkAdd(ctx context.Context, indexName, docType string, data []i
 
 func (dao *DAO) QueryByIds(ctx context.Context, index string, tps, ids []string, ttyp reflect.Type, boost *float64, queryName string) (rows []interface{}, err error) {
 	client := dao.getClient()
-	idsQuery := elasticapi.NewIdsQuery(tps...).Ids(ids...)
+	idsQuery := elasticapi.NewIdsQuery().Ids(ids...)
 	if boost != nil {
 		idsQuery.Boost(*boost)
 	}
@@ -76,7 +77,21 @@ func (dao *DAO) QueryByIds(ctx context.Context, index string, tps, ids []string,
 
 	searchResult, err := client.Search().Index(index).Query(idsQuery).Do(ctx)
 	if err != nil {
-		//log.Errorf(" ids query err:%s", err.Error())
+		return
+	}
+	for _, item := range searchResult.Each(ttyp) {
+		rows = append(rows, item)
+	}
+	return
+
+}
+
+func (dao *DAO) QueryByTime(ctx context.Context, index string, from, to time.Time, ttyp reflect.Type, size int) (rows []interface{}, err error) {
+	client := dao.getClient()
+	rangeQuery := elasticapi.NewRangeQuery("time")
+	rangeQuery.Gte(from).Lte(to)
+	searchResult, err := client.Search().Index(index).Size(size).Query(rangeQuery).Do(ctx)
+	if err != nil {
 		return
 	}
 	for _, item := range searchResult.Each(ttyp) {
