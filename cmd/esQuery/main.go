@@ -28,6 +28,12 @@ func main() {
 			}, &cli.StringFlag{
 				Name:  "esUrl",
 				Value: "http://192.168.2.194:9200",
+			}, &cli.StringFlag{
+				Name:  "esUser",
+				Value: "",
+			}, &cli.StringFlag{
+				Name:  "esPasswd",
+				Value: "",
 			},
 		}, Action: func(c *cli.Context) error {
 			from, err := time.Parse("2006-01-02 15:04:05", c.String("from"))
@@ -36,7 +42,9 @@ func main() {
 			}
 			to := time.Now()
 			elasticConfig := elasticPkg.ConfigT{
-				URL: c.String("esUrl"),
+				URL:    c.String("esUrl"),
+				User:   c.String("esUser"),
+				Passwd: c.String("esPasswd"),
 			}
 			ctx := context.Background()
 			client, err := elasticPkg.NewElasticClient(ctx, &elasticConfig)
