@@ -7,6 +7,7 @@ func ReadOpen(path string) (*os.File, error) {
 	perm := os.FileMode(0)
 	return os.OpenFile(path, flag, perm)
 }
+
 /*
 
 func (h *Harvester) openFile() error {
@@ -39,4 +40,4 @@ func (h *Harvester) openFile() error {
 
 
 
- */
+*/

@@ -11,35 +11,35 @@ import (
 )
 
 type EsImportConfig struct {
-	ImportConfig importer.ConfigT `validate:"required,dive"`
-	FilePath      string          `validate:"required"`
+	ImportConfig  importer.ConfigT `validate:"required,dive"`
+	FilePath      string           `validate:"required"`
 	MaxLineSize   int
-	ElasticConfig elastic.ConfigT   `validate:"required"`
-	LoggerConfig  logger.ConfigT    `validate:"required"`
+	ElasticConfig elastic.ConfigT `validate:"required"`
+	LoggerConfig  logger.ConfigT  `validate:"required"`
 }
 
-func (ec *EsImportConfig) check () error{
+func (ec *EsImportConfig) check() error {
 	vd := validator.New()
-	return  vd.Struct(ec)
+	return vd.Struct(ec)
 }
 
 var config *EsImportConfig
 
-func GetConfig()*EsImportConfig{
+func GetConfig() *EsImportConfig {
 	return config
 }
 
-func InitConfig(filePath string)error{
+func InitConfig(filePath string) error {
 	yamlFile, err := ioutil.ReadFile(filePath)
-	if err != nil{
+	if err != nil {
 		return err
 	}
 	c := new(EsImportConfig)
-	if err = yaml.Unmarshal(yamlFile, c); err != nil{
+	if err = yaml.Unmarshal(yamlFile, c); err != nil {
 		return err
 	}
 	//fmt.Println(c)
-	if err = c.check(); err != nil{
+	if err = c.check(); err != nil {
 		return err
 	}
 	config = c

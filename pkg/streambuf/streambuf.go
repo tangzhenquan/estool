@@ -492,7 +492,6 @@ func (b *Buffer) PeekByteFrom(off int) (byte, error) {
 	return b.data[b.mark+off], nil
 }
 
-
 // Write writes p to the buffer if buffer is not fixed. Returns the number of
 // bytes written or ErrOperationNotAllowed if buffer is fixed.
 func (b *Buffer) Write(p []byte) (int, error) {

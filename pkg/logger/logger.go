@@ -10,16 +10,17 @@ import (
 	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
 )
+
 type ConfigT struct {
-	File  string  `validate:"required"`
-	Level string  `validate:"required"`
+	File  string `validate:"required"`
+	Level string `validate:"required"`
 }
 
 func InitLogger(c *ConfigT) error {
 	if ok := strings.HasPrefix(c.File, "/"); !ok {
 		dir := filepath.Dir(c.File)
 		if _, err := os.Stat(dir); os.IsNotExist(err) {
-			if err = os.MkdirAll(dir, 0755); err != nil{
+			if err = os.MkdirAll(dir, 0755); err != nil {
 				return err
 			}
 		}

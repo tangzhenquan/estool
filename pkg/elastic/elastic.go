@@ -5,9 +5,10 @@ import (
 	"fmt"
 	elasticapi "github.com/olivere/elastic/v7"
 )
+
 type ConfigT struct {
 	// 访问地址
-	URL string  `validate:"required"`
+	URL string `validate:"required"`
 
 	// 用户名
 	User string
@@ -16,13 +17,12 @@ type ConfigT struct {
 	Passwd string
 }
 
-func (ct *ConfigT) Invalid() bool  {
+func (ct *ConfigT) Invalid() bool {
 	return len(ct.URL) == 0
 }
 
-
-func NewElasticClient(ctx context.Context,config *ConfigT)(*elasticapi.Client, error){
-	if config.Invalid(){
+func NewElasticClient(ctx context.Context, config *ConfigT) (*elasticapi.Client, error) {
+	if config.Invalid() {
 		return nil, InvalidConfigError
 	}
 	clientOpts := []elasticapi.ClientOptionFunc{elasticapi.SetURL(config.URL), elasticapi.SetSniff(false)}
@@ -31,8 +31,8 @@ func NewElasticClient(ctx context.Context,config *ConfigT)(*elasticapi.Client, e
 	}
 
 	client, err := elasticapi.NewClient(clientOpts...)
-	if err != nil{
-	 	return nil, err
+	if err != nil {
+		return nil, err
 	}
 	err = ping(ctx, client, config.URL)
 	if err != nil {

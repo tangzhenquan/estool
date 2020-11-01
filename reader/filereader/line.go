@@ -3,12 +3,10 @@ package filereader
 import (
 	"bufio"
 	"esTool/pkg/file"
+	"esTool/reader"
 	"os"
 	"strings"
-	"esTool/reader"
 )
-
-
 
 // SeekInfo represents arguments to `os.Seek`
 /*type SeekInfo struct {
@@ -21,17 +19,16 @@ type LineReader struct {
 	reader *bufio.Reader
 }
 
-func NewLineReader(filepath string, maxLineSize int)(*LineReader,  error ){
+func NewLineReader(filepath string, maxLineSize int) (*LineReader, error) {
 	f, err := file.ReadOpen(filepath)
-	if err != nil{
+	if err != nil {
 		return nil, err
 	}
 	lr := new(LineReader)
 
 	lr.file = f
 	if maxLineSize > 0 {
-		// add 2 to account for newline characters
-		lr.reader = bufio.NewReaderSize(lr.file, maxLineSize+2)
+		lr.reader = bufio.NewReaderSize(lr.file, maxLineSize)
 	} else {
 		lr.reader = bufio.NewReader(lr.file)
 	}
@@ -49,19 +46,19 @@ func (lr *LineReader) readLine() (string, error) {
 	return line, err
 }
 
-func (lr *LineReader)Next()(reader.Line, error) {
+func (lr *LineReader) Next() (reader.Line, error) {
 	// Read line by line.
 	line, err := lr.readLine()
-	if err == nil{
+	if err == nil {
 		return reader.NewLine(line), nil
-	}else {
+	} else {
 		return reader.Line{}, err
 	}
 }
 
 func (lr *LineReader) Close() error {
-	if lr.file != nil{
-		return 	lr.file.Close()
+	if lr.file != nil {
+		return lr.file.Close()
 	}
 	return nil
 }
