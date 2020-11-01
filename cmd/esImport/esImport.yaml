@@ -4,7 +4,7 @@ loggerConfig:
 
 elasticConfig:
   uRL:  "https://es-67q59g1b.public.tencentelasticsearch.com:9200"
-  user: "esImport.log"
+  user: "elastic"
   passwd: "Pcmgr@2020"
 
 filePath: "testData.txt"
