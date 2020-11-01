@@ -3,16 +3,16 @@ loggerConfig:
   level: "debug"
 
 elasticConfig:
-  uRL:  "http://192.168.2.194:9200/"
-  user: ""
-  passwd: ""
+  uRL:  "https://es-67q59g1b.public.tencentelasticsearch.com:9200"
+  user: "esImport.log"
+  passwd: "debug"
 
-filePath: "../tool/testData.txt"
+filePath: "testData.txt"
 maxLineSize: 4096
 
 importConfig:
   sep: "#"
-  indexName: "loglog102"
+  indexName: "log4es"
   docType:  "log"
   maxBukBufferSize:  5000
   maxReadChanBufferSize:  10000
