@@ -1,0 +1,30 @@
+loggerConfig:
+  file: "esImport.log"
+  level: "debug"
+
+elasticConfig:
+  uRL:  "http://192.168.2.194:9200/"
+  user: ""
+  passwd: ""
+
+filePath: "../tool/testData.txt"
+maxLineSize: 4096
+
+importConfig:
+  sep: "#"
+  indexName: "loglog102"
+  docType:  "log"
+  maxBukBufferSize:  5000
+  maxReadChanBufferSize:  10000
+  mapping: ""
+  fields:
+    - name: "time"
+      type: "@time@2006-01-02 15:04:05"
+    - name: "ip"
+      type: "@string"
+    - name: "count"
+      type: "@int"
+    - name: "price"
+      type: "@float"
+
+
