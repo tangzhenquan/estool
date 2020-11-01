@@ -17,13 +17,12 @@ import (
 	"syscall"
 )
 
-
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	app := &cli.App{
-		Name:  "esImport",
-		Usage: "Import log file into elasticsearch",
+		Name:    "esImport",
+		Usage:   "Import log file into elasticsearch",
 		Version: "0.0.1",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
@@ -33,7 +32,7 @@ func main() {
 			},
 		},
 		Action: func(c *cli.Context) error {
-			if err := config.InitConfig(c.String("conf")); err != nil{
+			if err := config.InitConfig(c.String("conf")); err != nil {
 				log.WithError(err).Error("init config error")
 				return err
 
@@ -56,19 +55,19 @@ func main() {
 				return err
 			}
 			defer func() {
-				if err = reader.Close(); err != nil{
+				if err = reader.Close(); err != nil {
 					log.WithError(err).WithField("filePath", esImportConfig.FilePath).Error("reader close error")
 				}
 			}()
 
-			importor := importer.NewImporter(ctx, elasticDao.NewDAO(client), &esImportConfig.ImportConfig, reader)
+			newImporter := importer.NewImporter(ctx, elasticDao.NewDAO(client), &esImportConfig.ImportConfig, reader)
 			stopCh := make(chan struct{})
 			utils.SafeExecFunc(func(i ...interface{}) {
-				err = importor.Start()
+				err = newImporter.Start()
 				if err != nil {
 					log.WithError(err).Error("start error")
 				}
-				importor.PrintStats()
+				newImporter.PrintStats()
 				stopCh <- struct{}{}
 			})
 
@@ -84,7 +83,7 @@ func main() {
 			return nil
 		},
 	}
-	if err := app.Run(os.Args); err != nil{
+	if err := app.Run(os.Args); err != nil {
 		log.WithError(err).Fatal(err)
 	}
 
