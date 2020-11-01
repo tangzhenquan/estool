@@ -40,7 +40,6 @@ func main() {
 	defer cancel()
 	app := &cli.App{
 		Name:    "tool",
-		Usage:   "tools ",
 		Version: "0.0.1",
 		Flags: []cli.Flag{
 			&cli.Int64Flag{
