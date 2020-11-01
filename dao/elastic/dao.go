@@ -6,21 +6,19 @@ import (
 	"reflect"
 )
 
-
-
 type DAO struct {
-	client  *elasticapi.Client
+	client *elasticapi.Client
 }
 
-func NewDAO(client  *elasticapi.Client) *DAO {
+func NewDAO(client *elasticapi.Client) *DAO {
 	return &DAO{client: client}
 }
 
-func (dao *DAO) getClient()*elasticapi.Client  {
+func (dao *DAO) getClient() *elasticapi.Client {
 	return dao.client
 }
 
-func (dao *DAO) CreateIndexIfDoesNotExist(ctx context.Context,  indexName, mapping string) error {
+func (dao *DAO) CreateIndexIfDoesNotExist(ctx context.Context, indexName, mapping string) error {
 	client := dao.getClient()
 	exists, err := client.IndexExists(indexName).Do(ctx)
 	if err != nil {
@@ -31,8 +29,8 @@ func (dao *DAO) CreateIndexIfDoesNotExist(ctx context.Context,  indexName, mappi
 	}
 
 	indicesCreateService := client.CreateIndex(indexName)
-	if mapping != ""{
-		indicesCreateService.BodyString(mapping)
+	if mapping != "" {
+		indicesCreateService = indicesCreateService.BodyString(mapping)
 	}
 	res, err := indicesCreateService.Do(ctx)
 	if err != nil {
@@ -46,28 +44,27 @@ func (dao *DAO) CreateIndexIfDoesNotExist(ctx context.Context,  indexName, mappi
 }
 
 type BulkAddRes struct {
-	Err error
-	FailedIds []string
+	Err          error
+	FailedIds    []string
 	SuccessCount int
-	DupIds []string
-	TooManyIds []string
-	HardError bool
+	DupIds       []string
+	TooManyIds   []string
+	HardError    bool
 }
 
-
-func  (dao *DAO) BulkAdd(ctx context.Context, indexName , docType string, data []interface{})(*elasticapi.BulkResponse, error){
+func (dao *DAO) BulkAdd(ctx context.Context, indexName, docType string, data []interface{}) (*elasticapi.BulkResponse, error) {
 	client := dao.getClient()
 	bulkRequest := client.Bulk()
 	for _, doc := range data {
 		esRequest := elasticapi.NewBulkIndexRequest().
-			Index(indexName).Doc(doc).Type(docType).UseEasyJSON(true).OpType("create")
+			Index(indexName).Doc(doc).UseEasyJSON(true).OpType("create")
 		bulkRequest = bulkRequest.Add(esRequest)
 	}
 	//r
 	return bulkRequest.Do(ctx)
 }
 
-func (dao *DAO) QueryByIds(ctx context.Context,index string, tps, ids []string, ttyp reflect.Type, boost *float64, queryName string) (rows []interface{}, err error) {
+func (dao *DAO) QueryByIds(ctx context.Context, index string, tps, ids []string, ttyp reflect.Type, boost *float64, queryName string) (rows []interface{}, err error) {
 	client := dao.getClient()
 	idsQuery := elasticapi.NewIdsQuery(tps...).Ids(ids...)
 	if boost != nil {
