@@ -4,7 +4,7 @@
 ### 用法
 1. 用tool 生成数据  例如 ./tool --count=10000000
 2. 用esImport导入数据, 如果有需要在配置文件esImport.yaml更改配置 例如 ./esImport --conf=esImport.yaml
-3. 用esQuery查询数据,当前只提供一个时间查询 例如  ./esQuery --esUrl=https://es-67q59g1b.public.tencentelasticsearch.com:9200 --esUser=elastic --esPasswd=Pcmgr@2020 --indexName=log4es --size=10
+3. 用esQuery查询数据,当前只提供一个时间查询 例如  ./esQuery --esUrl= --esUser=elastic --esPasswd= --indexName=log4es --size=10
 
 ### 编译
 进主目录,执行bash build.sh,生成文件在build/bin中
